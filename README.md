@@ -1,5 +1,5 @@
 # GyuDon
-TJAPlayer3のライブラリをFDKにしたTJAP3をベースに作っていくニジイロ風シミュレーター
+TJAPlayer3のライブラリをDxLibにしたTJAP3をベースに作っていくニジイロ風シミュレーター
 
 # TJAPlayer3
 DTXManiaをいじってtja再生プログラムにしちゃった[TJAPlayer2fPC](https://github.com/kairera0467/TJAP2fPC)をForkして本家風に改造したアレ。
