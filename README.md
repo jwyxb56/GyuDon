@@ -1,4 +1,4 @@
-#GyuDon
+# GyuDon
 TJAPlayer3のライブラリをFDKにしたTJAP3をベースに作っていくニジイロ風シミュレーター
 
 # TJAPlayer3
