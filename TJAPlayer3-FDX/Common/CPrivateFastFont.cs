@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Diagnostics;
 
 namespace TJAPlayer3
@@ -14,43 +11,26 @@ namespace TJAPlayer3
 	/// </summary>
 	public class CPrivateFastFont : CPrivateFont
 	{
-		/// <summary>
-		/// キャッシュ容量
-		/// </summary>
-		private const int MAXCACHESIZE = 128;
-
-		private struct FontCache
-		{
-			// public Font font;
-			public string drawstr;
-			public DrawMode drawmode;
-			public Color fontColor;
-			public Color edgeColor;
-			public Color gradationTopColor;
-			public Color gradationBottomColor;
-			public Bitmap bmp;
-			public Rectangle rectStrings;
-			public Point ptOrigin;
-		}
-		private List<FontCache> listFontCache;
-
-
 		#region [ コンストラクタ ]
 		public CPrivateFastFont(FontFamily fontfamily, int pt, FontStyle style)
 		{
-			Initialize(null, fontfamily, pt, style);
+			Initialize(null, fontfamily, pt, style, pt);
 		}
 		public CPrivateFastFont(FontFamily fontfamily, int pt)
 		{
-			Initialize(null, fontfamily, pt, FontStyle.Regular);
-		}
-		public CPrivateFastFont(string fontpath, int pt, FontStyle style)
+			Initialize(null, fontfamily, pt, FontStyle.Regular,pt);
+        }
+        public CPrivateFastFont(FontFamily fontfamily, int pt, int ed)
+        {
+            Initialize(null, fontfamily, pt, FontStyle.Regular, ed, 0);
+        }
+        public CPrivateFastFont(string fontpath, int pt, FontStyle style)
+        {
+            Initialize(fontpath, null, pt, style, pt);
+        }
+        public CPrivateFastFont(string fontpath, int pt)
 		{
-			Initialize(fontpath, null, pt, style);
-		}
-		public CPrivateFastFont(string fontpath, int pt)
-		{
-			Initialize(fontpath, null, pt, FontStyle.Regular);
+			Initialize(fontpath, null, pt, FontStyle.Regular, pt);
 		}
 		public CPrivateFastFont()
 		{
@@ -58,11 +38,11 @@ namespace TJAPlayer3
 		}
 		#endregion
 		#region [ コンストラクタから呼ばれる初期化処理 ]
-		protected new void Initialize(string fontpath, FontFamily fontfamily, int pt, FontStyle style)
+		protected new void Initialize(string fontpath, FontFamily fontfamily, int pt, FontStyle style, int ed,int tick = 0)
 		{
 			this.bDispose完了済み_CPrivateFastFont = false;
 			this.listFontCache = new List<FontCache>();
-			base.Initialize(fontpath, fontfamily, pt, style);
+			base.Initialize(fontpath, fontfamily, pt, style , ed, tick);
 		}
 		#endregion
 
@@ -102,18 +82,6 @@ namespace TJAPlayer3
 		{
 			return DrawPrivateFont(drawstr, dMode, fontColor, edgeColor, Color.White, Color.White);
 		}
-		/// <summary>
-		/// 文字列を描画したテクスチャを返す
-		/// </summary>
-		/// <param name="drawstr">描画文字列</param>
-		/// <param name="fontColor">描画色</param>
-		/// <param name="gradationTopColor">グラデーション 上側の色</param>
-		/// <param name="gradationBottomColor">グラデーション 下側の色</param>
-		/// <returns>描画済テクスチャ</returns>
-		//public new Bitmap DrawPrivateFont( string drawstr, Color fontColor, Color gradationTopColor, Color gradataionBottomColor )
-		//{
-		//    return DrawPrivateFont( drawstr, DrawMode.Gradation, fontColor, Color.White, gradationTopColor, gradataionBottomColor );
-		//}
 
 		/// <summary>
 		/// 文字列を描画したテクスチャを返す
@@ -140,64 +108,16 @@ namespace TJAPlayer3
 		/// <returns>描画済テクスチャ</returns>
 		public Bitmap DrawPrivateFont(string drawstr, Color fontColor, Color edgeColor, bool bVertical)
 		{
-			return DrawPrivateFont_V(drawstr, fontColor, edgeColor, bVertical);
+			if (bVertical)
+			{
+				return DrawPrivateFont_V(drawstr, fontColor, edgeColor, bVertical);
+			}
+			else
+			{
+				return DrawPrivateFont(drawstr, fontColor, edgeColor);
+			}
 		}
 
-#if こちらは使わない // (Bitmapではなく、CTextureを返す版)
-		/// <summary>
-		/// 文字列を描画したテクスチャを返す
-		/// </summary>
-		/// <param name="drawstr">描画文字列</param>
-		/// <param name="fontColor">描画色</param>
-		/// <returns>描画済テクスチャ</returns>
-		public CTexture DrawPrivateFont( string drawstr, Color fontColor )
-		{
-			Bitmap bmp = DrawPrivateFont( drawstr, DrawMode.Normal, fontColor, Color.White, Color.White, Color.White );
-			return CDTXMania.tテクスチャの生成( bmp, false );
-		}
-
-		/// <summary>
-		/// 文字列を描画したテクスチャを返す
-		/// </summary>
-		/// <param name="drawstr">描画文字列</param>
-		/// <param name="fontColor">描画色</param>
-		/// <param name="edgeColor">縁取色</param>
-		/// <returns>描画済テクスチャ</returns>
-		public CTexture DrawPrivateFont( string drawstr, Color fontColor, Color edgeColor )
-		{
-			Bitmap bmp = DrawPrivateFont( drawstr, DrawMode.Edge, fontColor, edgeColor, Color.White, Color.White );
-			return CDTXMania.tテクスチャの生成( bmp, false );
-		}
-
-		/// <summary>
-		/// 文字列を描画したテクスチャを返す
-		/// </summary>
-		/// <param name="drawstr">描画文字列</param>
-		/// <param name="fontColor">描画色</param>
-		/// <param name="gradationTopColor">グラデーション 上側の色</param>
-		/// <param name="gradationBottomColor">グラデーション 下側の色</param>
-		/// <returns>描画済テクスチャ</returns>
-		//public CTexture DrawPrivateFont( string drawstr, Color fontColor, Color gradationTopColor, Color gradataionBottomColor )
-		//{
-		//    Bitmap bmp = DrawPrivateFont( drawstr, DrawMode.Gradation, fontColor, Color.White, gradationTopColor, gradataionBottomColor );
-		//	  return CDTXMania.tテクスチャの生成( bmp, false );
-		//}
-
-		/// <summary>
-		/// 文字列を描画したテクスチャを返す
-		/// </summary>
-		/// <param name="drawstr">描画文字列</param>
-		/// <param name="fontColor">描画色</param>
-		/// <param name="edgeColor">縁取色</param>
-		/// <param name="gradationTopColor">グラデーション 上側の色</param>
-		/// <param name="gradationBottomColor">グラデーション 下側の色</param>
-		/// <returns>描画済テクスチャ</returns>
-		public CTexture DrawPrivateFont( string drawstr, Color fontColor, Color edgeColor,  Color gradationTopColor, Color gradataionBottomColor )
-		{
-			Bitmap bmp = DrawPrivateFont( drawstr, DrawMode.Edge | DrawMode.Gradation, fontColor, edgeColor, gradationTopColor, gradataionBottomColor );
-			return CDTXMania.tテクスチャの生成( bmp, false );
-		}
-#endif
 		#endregion
 
 		protected new Bitmap DrawPrivateFont(string drawstr, DrawMode drawmode, Color fontColor, Color edgeColor, Color gradationTopColor, Color gradationBottomColor)
@@ -330,7 +250,6 @@ namespace TJAPlayer3
 					//Debug.WriteLine( "Disposing CPrivateFastFont()" );
 					#region [ キャッシュしている画像を破棄する ]
 					foreach (FontCache bc in listFontCache)
-
 					{
 						if (bc.bmp != null)
 						{
@@ -350,6 +269,26 @@ namespace TJAPlayer3
 
 		#region [ private ]
 		//-----------------
+		/// <summary>
+		/// キャッシュ容量
+		/// </summary>
+		private const int MAXCACHESIZE = 256;
+
+		private struct FontCache
+		{
+			// public Font font;
+			public string drawstr;
+			public DrawMode drawmode;
+			public Color fontColor;
+			public Color edgeColor;
+			public Color gradationTopColor;
+			public Color gradationBottomColor;
+			public Bitmap bmp;
+			public Rectangle rectStrings;
+			public Point ptOrigin;
+		}
+		private List<FontCache> listFontCache;
+
 		protected bool bDispose完了済み_CPrivateFastFont;
 		//-----------------
 		#endregion

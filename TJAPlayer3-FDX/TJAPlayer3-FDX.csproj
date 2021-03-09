@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TJAPlayer3</RootNamespace>
-    <AssemblyName>TJAPlayer3-FDX</AssemblyName>
+    <AssemblyName>GyuDon</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>Resources\TJAPlayer3.ico</ApplicationIcon>
@@ -104,7 +104,6 @@
     <Compile Include="Common\ConfigIniToSongGainControllerBinder.cs" />
     <Compile Include="Common\ConfigIniToSoundGroupLevelControllerBinder.cs" />
     <Compile Include="Common\CPad.cs" />
-    <Compile Include="Common\CPrivateFastFont.cs" />
     <Compile Include="Common\CPrivateFont.cs" />
     <Compile Include="Common\CSkin.cs" />
     <Compile Include="Common\CVeirticalSongNameFont.cs" />
@@ -114,6 +113,7 @@
     <Compile Include="Common\KeyboardSoundGroupLevelControlHandler.cs" />
     <Compile Include="Common\Program.cs" />
     <Compile Include="Common\TJAPlayer3-FDX.cs" />
+    <Compile Include="Common\CPrivateFastFont.cs" />
     <Compile Include="Items\CItemBase.cs" />
     <Compile Include="Items\CItemInteger.cs" />
     <Compile Include="Items\CItemList.cs" />

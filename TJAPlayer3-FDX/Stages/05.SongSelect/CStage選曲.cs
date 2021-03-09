@@ -385,8 +385,27 @@ namespace TJAPlayer3
 					#endregion
 					if ( !this.actSortSongs.bIsActivePopupMenu && !this.actQuickConfig.bIsActivePopupMenu /*&&  !this.act難易度選択画面.bIsDifficltSelect */ )
 					{
-                        #region [ Shift-F1: CONFIG画面 ]
-                        if ( ( TJAPlayer3.Input管理.IsPushingKey( (int) DxLibDLL.DX.KEY_INPUT_LSHIFT ) || TJAPlayer3.Input管理.IsPushingKey( (int) DxLibDLL.DX.KEY_INPUT_LSHIFT ) ) &&
+						#region [ ESC ]
+						if (TJAPlayer3.Input管理.IsPushedKey(DxLibDLL.DX.KEY_INPUT_ESCAPE) && (this.act曲リスト.r現在選択中の曲 != null))
+							if (this.act曲リスト.r現在選択中の曲.r親ノード == null)
+							{   // [ESC]
+								TJAPlayer3.Skin.sound取消音.t再生する();
+								this.eフェードアウト完了時の戻り値 = E戻り値.タイトルに戻る;
+								this.actFIFO.tフェードアウト開始();
+								base.eフェーズID = CStage.Eフェーズ.共通_フェードアウト;
+								return 0;
+							}
+							else
+							{
+
+                                TJAPlayer3.Skin.sound取消音.t再生する();
+                                bool bNeedChangeSkin = this.act曲リスト.tBOXを出る();
+                                this.actPresound.tサウンド停止();
+								
+							}
+						#endregion
+						#region [ Shift-F1: CONFIG画面 ]
+						if ( ( TJAPlayer3.Input管理.IsPushingKey( (int) DxLibDLL.DX.KEY_INPUT_LSHIFT ) || TJAPlayer3.Input管理.IsPushingKey( (int) DxLibDLL.DX.KEY_INPUT_LSHIFT ) ) &&
 							TJAPlayer3.Input管理.IsPushedKey( (int) DxLibDLL.DX.KEY_INPUT_F1 ) )
 						{	// [SHIFT] + [F1] CONFIG
 							this.actPresound.tサウンド停止();

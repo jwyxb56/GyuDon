@@ -1618,7 +1618,7 @@ for (int i = 0; i < 3; i++) {
 
 			DX.ChangeWindowMode(DX.TRUE);  //ウィンドウモード切替
 			DX.SetGraphMode(1280, 720, 32); //ウィンドウサイズ決める
-			DX.SetMainWindowText("TJAPlayer3-FDX"); //ソフト名決める
+			DX.SetMainWindowText("GyuDon"); //ソフト名決める
 			DX.SetWindowStyleMode(7); //画面最大化できるようにする
 			DX.SetWindowSizeChangeEnableFlag(DX.TRUE); //ウィンドウサイズ変えれるようにする
 			DX.SetAlwaysRunFlag(DX.TRUE); //ソフトがアクティブじゃなくても処理続行するようにする
