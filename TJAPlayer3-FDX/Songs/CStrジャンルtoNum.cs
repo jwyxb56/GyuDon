@@ -53,5 +53,34 @@
                     return 8;
             }
         }
+
+        internal static int ForAC16(string strジャンル)
+        {
+            switch (strジャンル)
+            {
+                case "J-POP":
+                    return 1;
+                case "アニメ":
+                    return 2;
+                case "ゲーム&バラエティ":
+                case "ゲームミュージック":
+                    return 3;
+                case "ナムコオリジナル":
+                    return 4;
+                case "クラシック":
+                    return 5;
+                case "バラエティ":
+                    return 6;
+                case "キッズ":
+                case "どうよう":
+                    return 7;
+                case "ボーカロイド":
+                case "VOCALOID":
+                    return 8;
+                default:
+                    return 0;
+            }
+        }
+
     }
 }

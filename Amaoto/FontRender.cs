@@ -9,6 +9,8 @@ namespace Amaoto
 	/// </summary>
 	public class FontRender
 	{
+
+
 		/// <summary>
 		/// 文字テクスチャを生成するクラスの初期化をします。
 		/// </summary>
