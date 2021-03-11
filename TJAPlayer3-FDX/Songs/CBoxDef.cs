@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using System.Drawing;
+using FDK;
+using Amaoto;
 
 namespace TJAPlayer3
 {
@@ -18,33 +20,34 @@ namespace TJAPlayer3
         public Color BackColor;
         public bool IsChangedForeColor;
         public bool IsChangedBackColor;
+        public string Bar_Genre;
 
+        // コンストラクタ
 
-		// コンストラクタ
-
-		public CBoxDef()
-		{
-			this.Title = "";
-			this.Genre = "";
+        public CBoxDef()
+        {
+            this.Title = "";
+            this.Genre = "";
             ForeColor = Color.White;
             BackColor = Color.Black;
+         
+        }
+        public CBoxDef(string boxdefファイル名)
+            : this()
+        {
+            this.t読み込み(boxdefファイル名);
+        }
 
-		}
-		public CBoxDef( string boxdefファイル名 )
-			: this()
-		{
-			this.t読み込み( boxdefファイル名 );
-		}
 
+        // メソッド
 
-		// メソッド
+        public void t読み込み(string boxdefファイル名)
+        {
+            StreamReader reader = new StreamReader(boxdefファイル名, Encoding.GetEncoding("Shift_JIS"));      
 
-		public void t読み込み( string boxdefファイル名 )
-		{
-			StreamReader reader = new StreamReader( boxdefファイル名, Encoding.GetEncoding( "Shift_JIS" ) );
-			string str = null;
-			while( ( str = reader.ReadLine() ) != null )
-			{
+            string str = null;
+            while ((str = reader.ReadLine()) != null)
+            {
 				if( str.Length != 0 )
 				{
 					try

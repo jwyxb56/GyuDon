@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using TJAPlayer3.C曲リストノードComparers;
 using FDK;
+using Amaoto;
 
 namespace TJAPlayer3
 {
@@ -303,10 +304,9 @@ namespace TJAPlayer3
                                         c曲リストノード.BackColor = c曲リストノード.r親ノード.BackColor;
                                         c曲リストノード.IsChangedBackColor = true;
                                     }
-                                }
+                                }							
 
-
-                                switch (CStrジャンルtoNum.ForAC15(c曲リストノード.strジャンル))
+								switch (CStrジャンルtoNum.ForAC15(c曲リストノード.strジャンル))
                                 {
                                     case 0:
                                         c曲リストノード.ForeColor = TJAPlayer3.Skin.SongSelect_ForeColor_JPOP;
@@ -415,7 +415,7 @@ namespace TJAPlayer3
 					c曲リストノード.strタイトル = infoDir.Name.Substring( 9 );
 					c曲リストノード.nスコア数 = 1;
 					c曲リストノード.r親ノード = node親;
-
+				
 
 					// 一旦、上位BOXのスキン情報をコピー (後でbox.defの記載にて上書きされる場合がある)
 					c曲リストノード.strSkinPath = ( c曲リストノード.r親ノード == null ) ?
@@ -499,7 +499,7 @@ namespace TJAPlayer3
 					c曲リストノード.strタイトル = boxdef.Title;
 					c曲リストノード.strジャンル = boxdef.Genre;
 
-                    if (boxdef.IsChangedForeColor)
+					if (boxdef.IsChangedForeColor)
                     {
                         c曲リストノード.ForeColor = boxdef.ForeColor;
                         c曲リストノード.IsChangedForeColor = true;
@@ -558,7 +558,7 @@ namespace TJAPlayer3
 					c曲リストノード.r親ノード = node親;
 
 					c曲リストノード.strBreadcrumbs = ( c曲リストノード.r親ノード == null ) ?
-						c曲リストノード.strタイトル : c曲リストノード.r親ノード.strBreadcrumbs + " > " + c曲リストノード.strタイトル;
+					c曲リストノード.strタイトル : c曲リストノード.r親ノード.strBreadcrumbs + " > " + c曲リストノード.strタイトル;
 	
 					
 					c曲リストノード.list子リスト = new List<C曲リストノード>();
@@ -782,8 +782,7 @@ namespace TJAPlayer3
 				{
 					this.tSongsDBになかった曲をファイルから読み込んで反映する( c曲リストノード.list子リスト );
 				}
-				else if( ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.SCORE )
-					  || ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.SCORE_MIDI ) )
+				else if( ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.SCORE )|| ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.SCORE_MIDI ) )
 				{
 					for( int i = 0; i < (int)Difficulty.Total; i++ )
 					{

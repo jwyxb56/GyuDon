@@ -554,6 +554,12 @@ namespace TJAPlayer3
 
 
 
+			var fontFamily =  new FontFamily(TJAPlayer3.ConfigIni.FontName);
+
+			this.pfMusicName = new CPrivateFastFont(fontFamily, 22);
+			this.pfSubtitle = new CPrivateFastFont(fontFamily, 13, 16);
+
+			ctBarAnime = new CCounter();
 
 			// バー情報を初期化する。
 
@@ -570,7 +576,11 @@ namespace TJAPlayer3
 			if( this.b活性化してない )
 				return;
 
+			TJAPlayer3.t安全にDisposeする(ref pfMusicName);
+			TJAPlayer3.t安全にDisposeする(ref pfSubtitle);
+
 			TJAPlayer3.t安全にDisposeする( ref this.ft曲リスト用フォント );
+
 
 			for( int i = 0; i < 13; i++ )
 				this.ct登場アニメ用[ i ] = null;
@@ -692,10 +702,10 @@ namespace TJAPlayer3
                 this.stバー情報[ i ].ttkタイトル = null;
             }
 
-		
+			ClearTitleTextureCache();
 
-            //CDTXMania.t安全にDisposeする( ref this.txスキル数字 );
-            TJAPlayer3.tテクスチャの解放( ref this.txEnumeratingSongs );
+			//CDTXMania.t安全にDisposeする( ref this.txスキル数字 );
+			TJAPlayer3.tテクスチャの解放( ref this.txEnumeratingSongs );
             TJAPlayer3.tテクスチャの解放( ref this.txSongNotFound );
             //CDTXMania.t安全にDisposeする( ref this.tx曲名バー.Score );
             //CDTXMania.t安全にDisposeする( ref this.tx曲名バー.Box );
@@ -753,15 +763,11 @@ namespace TJAPlayer3
 			//-----------------
 			#endregion
 
-
+		
 			// まだ選択中の曲が決まってなければ、曲ツリールートの最初の曲にセットする。
 
 			if ((this.r現在選択中の曲 == null) && (TJAPlayer3.Songs管理.list曲ルート.Count > 0))
 				this.r現在選択中の曲 = TJAPlayer3.Songs管理.list曲ルート[0];
-
-
-			// 本ステージは、(1)登場アニメフェーズ → (2)通常フェーズ　と二段階にわけて進む。
-
 
 			// 進行。
 			if (n現在のスクロールカウンタ == 0)
@@ -852,6 +858,7 @@ namespace TJAPlayer3
 					this.stバー情報[index].strジャンル = song.strジャンル;
 					this.stバー情報[index].strサブタイトル = song.strサブタイトル;
 					this.stバー情報[index].ar難易度 = song.nLevel;
+				
 					for (int f = 0; f < (int)Difficulty.Total; f++)
 					{
 						if (song.arスコア[f] != null)
@@ -920,6 +927,7 @@ namespace TJAPlayer3
 					this.stバー情報[index].strサブタイトル = song.strサブタイトル;
 					this.stバー情報[index].strジャンル = song.strジャンル;
 					this.stバー情報[index].ar難易度 = song.nLevel;
+					
 					for (int f = 0; f < (int)Difficulty.Total; f++)
 					{
 						if (song.arスコア[f] != null)
@@ -945,9 +953,6 @@ namespace TJAPlayer3
 
 					for (int i = 0; i < 3; i++)
 						this.stバー情報[index].nスキル値[i] = (int)song.arスコア[this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(song)].譜面情報.最大スキル[i];
-
-
-					// 1行(100カウント)移動完了。
 
 					this.n現在のスクロールカウンタ += 100;
 					this.n目標のスクロールカウンタ += 100;
@@ -1005,10 +1010,6 @@ namespace TJAPlayer3
 				return 0;
 			}
 
-			int i選曲バーX座標 = 673; //選曲バーの座標用
-			int i選択曲バーX座標 = 665; //選択曲バーの座標用
-
-
 			#region [ (2) 通常フェーズの描画。]
 			//-----------------
 			for (int i = 0; i < 13; i++)    // パネルは全13枚。
@@ -1020,10 +1021,8 @@ namespace TJAPlayer3
 				int nパネル番号 = (((this.n現在の選択行 - 5) + i) + 13) % 13;
 				int n見た目の行番号 = i;
 				int n次のパネル番号 = (this.n現在のスクロールカウンタ <= 0) ? ((i + 1) % 13) : (((i - 1) + 13) % 13);
-				int x = i選曲バーX座標;
 				int xAnime = this.ptバーの座標[n見た目の行番号].X + ((int)((this.ptバーの座標[n次のパネル番号].X - this.ptバーの座標[n見た目の行番号].X) * (((double)Math.Abs(this.n現在のスクロールカウンタ)) / 100.0)));
 				int yAnime = this.ptバーの座標[n見た目の行番号].Y + ((int)((this.ptバーの座標[n次のパネル番号].Y - this.ptバーの座標[n見た目の行番号].Y) * (((double)Math.Abs(this.n現在のスクロールカウンタ)) / 100.0)));
-				int y = this.ptバーの基本座標[n見た目の行番号].Y + ((int)((this.ptバーの基本座標[n次のパネル番号].Y - this.ptバーの基本座標[n見た目の行番号].Y) * (((double)Math.Abs(this.n現在のスクロールカウンタ)) / 100.0)));
 
 				{
 					// (B) スクロール中の選択曲バー、またはその他のバーの描画。
@@ -1042,16 +1041,9 @@ namespace TJAPlayer3
 					#region [ タイトル名テクスチャを描画。]
 
 					if (n現在のスクロールカウンタ != 0)
-                    {
-						ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).ReferencePoint = ReferencePoint.TopCenter;
-						ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).Draw(xAnime + 322, yAnime + 13);
-					}					
+						ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);				
 					else if (n見た目の行番号 != 5)
-                    {
-						ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).ReferencePoint = ReferencePoint.TopCenter;
-						ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).Draw(xAnime + 322, yAnime + 13);
-					}
-						
+						ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
 
 					#endregion
 
@@ -1066,16 +1058,47 @@ namespace TJAPlayer3
 				}
 			}
 			#endregion
+
+			ctBarAnime.t進行();
+
 			if (this.n現在のスクロールカウンタ == 0)
 			{
 				#region [ Bar_Center ] 
+				{
+					if (!ctBarAnime.b進行中)
+						ctBarAnime.t開始(0, 500, 1, TJAPlayer3.Timer);
 
-				int bargenreindex = CStrジャンルtoNum.ForAC16(r現在選択中の曲.strジャンル);
-				TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex]?.t2D描画(328, 317);
-				TJAPlayer3.Tx.SongSelect_Bar_Genre_W?.t2D描画(328, 317);
+					int bargenreindex = CStrジャンルtoNum.ForAC16(r現在選択中の曲.strジャンル);
+					float y = 0;
 
+					if (ctBarAnime.n現在の値 >= 430)
+					{
+						y = (ctBarAnime.n現在の値 - 430f) * (60f / 70f);
+					}
+
+					//中の拡大率
+					TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex].vc拡大縮小倍率.Y = 1f + y;
+					TJAPlayer3.Tx.SongSelect_Bar_Genre_W.vc拡大縮小倍率.Y = 1f + y;
+					//中上
+					TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex]?.t2D描画(328, 317 + 43 - y, new Rectangle(0, 43 , 624, 1));
+					TJAPlayer3.Tx.SongSelect_Bar_Genre_W?.t2D描画(328, 317 + 43 - y, new Rectangle(0, 43, 624, 1));
+					//中下
+					TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex]?.t2D描画(328, 317 + 43, new Rectangle(0, 43, 624, 1));
+					TJAPlayer3.Tx.SongSelect_Bar_Genre_W?.t2D描画(328, 317 + 43, new Rectangle(0, 43, 624, 1));
+
+					//拡大率を元に戻す
+					TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex].vc拡大縮小倍率.Y = 1f;
+					TJAPlayer3.Tx.SongSelect_Bar_Genre_W.vc拡大縮小倍率.Y = 1f;
+					//上
+					TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex]?.t2D描画(328, 317 - y, new Rectangle(0, 0, 624, 43));
+					TJAPlayer3.Tx.SongSelect_Bar_Genre_W?.t2D描画(328, 317 - y, new Rectangle(0, 0, 624, 43));
+					//下
+					TJAPlayer3.Tx.SongSelect_Bar_Genre[bargenreindex]?.t2D描画(328, 317 + 43 + y, new Rectangle(0, 43, 624, 43));
+					TJAPlayer3.Tx.SongSelect_Bar_Genre_W?.t2D描画(328, 317 + 43 + y, new Rectangle(0, 43, 624, 43));
+					
+
+				}
 				#endregion
-
 
 				switch (r現在選択中の曲.eノード種別)
 				{
@@ -1205,19 +1228,18 @@ namespace TJAPlayer3
 						if (TJAPlayer3.Tx.SongSelect_Frame_Random != null)
 							TJAPlayer3.Tx.SongSelect_Frame_Random.t2D描画(450, TJAPlayer3.Skin.SongSelect_Overall_Y);
 						break;
-						//case C曲リストノード.Eノード種別.DANI:
-						//    if (CDTXMania.Tx.SongSelect_Frame_Dani != null)
-						//        CDTXMania.Tx.SongSelect_Frame_Dani.t2D描画(CDTXMania.app.Device, 450, nバーの高さ);
-						//    break;
+						
 				}
-				//if( CDTXMania.Tx.SongSelect_Level != null )
-				//    CDTXMania.Tx.SongSelect_Level.t2D描画( CDTXMania.app.Device, 518, 169 );
+	
 				if (TJAPlayer3.Tx.SongSelect_Branch_Text != null && TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度])
 					TJAPlayer3.Tx.SongSelect_Branch_Text.t2D描画(483, TJAPlayer3.Skin.SongSelect_Overall_Y + 21);
 
 			}
-
-
+            else
+            {
+				ctBarAnime.t停止();
+				ctBarAnime.n現在の値 = 0;
+            }
 
 			for (int i = 0; i < 13; i++)    // パネルは全13枚。
 			{
@@ -1226,12 +1248,6 @@ namespace TJAPlayer3
 					continue;
 
 				int nパネル番号 = (((this.n現在の選択行 - 5) + i) + 13) % 13;
-				int n見た目の行番号 = i;
-				int n次のパネル番号 = (this.n現在のスクロールカウンタ <= 0) ? ((i + 1) % 13) : (((i - 1) + 13) % 13);
-				//int x = this.ptバーの基本座標[ n見た目の行番号 ].X + ( (int) ( ( this.ptバーの基本座標[ n次のパネル番号 ].X - this.ptバーの基本座標[ n見た目の行番号 ].X ) * ( ( (double) Math.Abs( this.n現在のスクロールカウンタ ) ) / 100.0 ) ) );
-				int x = i選曲バーX座標;
-                int xAnime = this.ptバーの座標[n見た目の行番号].X + ((int)((this.ptバーの座標[n次のパネル番号].X - this.ptバーの座標[n見た目の行番号].X) * (((double)Math.Abs(this.n現在のスクロールカウンタ)) / 100.0)));
-                int y = this.ptバーの基本座標[n見た目の行番号].Y + ((int)((this.ptバーの基本座標[n次のパネル番号].Y - this.ptバーの基本座標[n見た目の行番号].Y) * (((double)Math.Abs(this.n現在のスクロールカウンタ)) / 100.0)));
 
                 if ((i == 5) && (this.n現在のスクロールカウンタ == 0))
                 {
@@ -1244,27 +1260,21 @@ namespace TJAPlayer3
                     if (this.stバー情報[nパネル番号].strサブタイトル != "" && this.ttk選択している曲のサブタイトル == null)
                         this.ttk選択している曲のサブタイトル = this.ttkサブタイトルテクスチャを生成する(this.stバー情報[nパネル番号].strサブタイトル, this.stバー情報[nパネル番号].ForeColor, this.stバー情報[nパネル番号].BackColor);
 
-                    //サブタイトルがあったら700
+					float y = 0;
 
-                    if (this.ttk選択している曲のサブタイトル != null)
+					if (ctBarAnime.n現在の値 >= 430)
+					{
+						y = (ctBarAnime.n現在の値 - 430f) * (45f / 70f);
+					}
+
+					if (this.ttk選択している曲のサブタイトル != null)
                     {
                         var tx選択している曲のサブタイトル = ResolveTitleTexture(ttk選択している曲のサブタイトル);
-						tx選択している曲のサブタイトル.ReferencePoint = ReferencePoint.TopCenter;
-						int nサブタイY = (int)(TJAPlayer3.Skin.SongSelect_Overall_Y + 440 - (tx選択している曲のサブタイトル.TextureSize.height * tx選択している曲のサブタイトル.ScaleY));
-                        tx選択している曲のサブタイトル.Draw(707, nサブタイY);
-						ResolveTitleTexture(this.ttk選択している曲の曲名).ReferencePoint = ReferencePoint.TopCenter;
-						ResolveTitleTexture(this.ttk選択している曲の曲名)?.Draw(650, 330);
-                    }
-                    else
-                    {
-						ResolveTitleTexture(this.ttk選択している曲の曲名).ReferencePoint = ReferencePoint.TopCenter;
-						ResolveTitleTexture(this.ttk選択している曲の曲名)?.Draw(650, 330);
+						int nサブタイY = (int)(TJAPlayer3.Skin.SongSelect_Overall_Y + 440 - (tx選択している曲のサブタイトル.szテクスチャサイズ.Height * tx選択している曲のサブタイトル.vc拡大縮小倍率.Y));
+                        tx選択している曲のサブタイトル.t2D拡大率考慮上中央基準描画(707, nサブタイY);						
                     }
 
-                    //if( this.stバー情報[ nパネル番号 ].txタイトル名 != null )
-                    //	this.stバー情報[ nパネル番号 ].txタイトル名.t2D描画( CDTXMania.app.Device, i選択曲バーX座標 + 65, y選曲 + 6 );
-
-                    //CDTXMania.act文字コンソール.tPrint( i選曲バーX座標 - 20, y選曲 + 6, C文字コンソール.Eフォント種別.白, this.r現在選択中のスコア.譜面情報.b譜面分岐[3].ToString() );
+					ResolveTitleTexture(this.ttk選択している曲の曲名)?.t2D拡大率考慮上中央基準描画(640, 328 - (int)y);
                     //-----------------
                     #endregion
                 }
@@ -1339,15 +1349,15 @@ namespace TJAPlayer3
 			public CTexture txタイトル名;
 			public STDGBVALUE<int> nスキル値;
 			public Color col文字色;
-            public Color ForeColor;
-            public Color BackColor;
-            public int[] ar難易度;
-            public bool[] b分岐;
-            public string strジャンル;
-            public string strサブタイトル;
-            public TitleTextureKey ttkタイトル;
-            internal int[] Level;
-        }
+			public Color ForeColor;
+			public Color BackColor;
+			public int[] ar難易度;
+			public bool[] b分岐;
+			public string strジャンル;
+			public string strサブタイトル;
+			public TitleTextureKey ttkタイトル;
+			internal int[] Level;
+		}
 
 		private struct ST選曲バー
 		{
@@ -1392,6 +1402,8 @@ namespace TJAPlayer3
 			}
 		}
 
+		public CCounter ctBarAnime;
+
         public bool b選択曲が変更された = true;
 		private bool b登場アニメ全部完了;
 		private Color color文字影 = Color.FromArgb( 0x40, 10, 10, 10 );
@@ -1399,14 +1411,14 @@ namespace TJAPlayer3
         private CCounter ct三角矢印アニメ;
         private CCounter counter;
         private EFIFOモード mode;
-		private FontRender frMusicName;
-		private FontRender frSubtitle;
+		private CPrivateFastFont pfMusicName;
+		private CPrivateFastFont pfSubtitle;
 
-	    // 2018-09-17 twopointzero: I can scroll through 2300 songs consuming approx. 200MB of memory.
-	    //                          I have set the title texture cache size to a nearby round number (2500.)
-        //                          If we'd like title textures to take up no more than 100MB, for example,
-        //                          then a cache size of 1000 would be roughly correct.
-	    private readonly LurchTable<TitleTextureKey, Texture> _titleTextures =  new LurchTable<TitleTextureKey, Texture>(LurchTableOrder.Access, 2500);
+		// 2018-09-17 twopointzero: I can scroll through 2300 songs consuming approx. 200MB of memory.
+		//                          I have set the title texture cache size to a nearby round number (2500.)
+		//                          If we'd like title textures to take up no more than 100MB, for example,
+		//                          then a cache size of 1000 would be roughly correct.
+		private readonly LurchTable<TitleTextureKey, CTexture> _titleTextures =  new LurchTable<TitleTextureKey, CTexture>(LurchTableOrder.Access, 2500);
 
 		private E楽器パート e楽器パート;
 		private Font ft曲リスト用フォント;
@@ -1416,7 +1428,7 @@ namespace TJAPlayer3
 		private int n目標のスクロールカウンタ;
         private readonly Point[] ptバーの基本座標 = new Point[] { new Point( 0x2c4, 5 ), new Point( 0x272, 56 ), new Point( 0x242, 107 ), new Point( 0x222, 158 ), new Point( 0x210, 209 ), new Point( 0x1d0, 270 ), new Point( 0x224, 362 ), new Point( 0x242, 413 ), new Point( 0x270, 464 ), new Point( 0x2ae, 515 ), new Point( 0x314, 566 ), new Point( 0x3e4, 617 ), new Point( 0x500, 668 ) };
 		private Point[] ptバーの座標 = new Point[]
-		  { new Point( 215, -118 ), new Point( 215, -118 ), new Point( 241, -31  ), new Point( 268, 58 ), new Point( 295, 148 ),
+		  { new Point( 215, -118 ), new Point( 215, -118 ), new Point( 241, -32  ), new Point( 268, 57 ), new Point( 294, 147 ),
 			new Point( 328, 317 ),
 			new Point( 369, 486 ), new Point( 392, 576 ), new Point( 415, 666  ), new Point( 428, 756 ), new Point( 428, 781 ), new Point( 428, 781 ), new Point( 428, 781 ) };
 
@@ -1589,8 +1601,8 @@ namespace TJAPlayer3
 				this.stバー情報[ i ].eバー種別 = this.e曲のバー種別を返す( song );
                 this.stバー情報[ i ].strサブタイトル = song.strサブタイトル;
                 this.stバー情報[ i ].ar難易度 = song.nLevel;
-
-			    for( int f = 0; f < (int)Difficulty.Total; f++ )
+				
+				for ( int f = 0; f < (int)Difficulty.Total; f++ )
                 {
                     if( song.arスコア[ f ] != null )
                         this.stバー情報[ i ].b分岐 = song.arスコア[ f ].譜面情報.b譜面分岐;
@@ -1783,68 +1795,73 @@ namespace TJAPlayer3
             return nGenre;
         }
 
-        private TitleTextureKey ttk曲名テクスチャを生成する(string str文字, Color forecolor, Color backcolor)
-        {
-            return new TitleTextureKey(str文字, frMusicName, forecolor, backcolor, 410, TJAPlayer3.ConfigIni.FontName, 28, 7, -8);
-        }
-
-        private TitleTextureKey ttkサブタイトルテクスチャを生成する(string str文字, Color forecolor, Color backcolor)
-        {
-            return new TitleTextureKey(str文字, frSubtitle, forecolor, backcolor, 390, TJAPlayer3.ConfigIni.FontName, 13, 3);
-        }
-
-        private Texture ResolveTitleTexture(TitleTextureKey titleTextureKey)
-        {
-            if (!_titleTextures.TryGetValue(titleTextureKey, out var texture))
-            {
-                texture = GenerateTitleTexture(titleTextureKey);
-                _titleTextures.Add(titleTextureKey, texture);
-            }
-
-            return texture;
-        }
-
-        private static Texture GenerateTitleTexture(TitleTextureKey titleTextureKey)
-        {
-            FontRender FR = new FontRender(new FontFamily(titleTextureKey.Font), titleTextureKey.FontSize, titleTextureKey.EdgeSize);
-			Texture tx = FR.GetTexture(titleTextureKey.str文字, titleTextureKey.forecolor, titleTextureKey.backcolor, titleTextureKey.Tick);
-			if (tx.TextureSize.height > titleTextureKey.maxHeight)
-			{
-				tx.ScaleY = (float)(((double)titleTextureKey.maxHeight) / tx.TextureSize.height);
-				
-			}
-
-			return tx;
+		private TitleTextureKey ttk曲名テクスチャを生成する(string str文字, Color forecolor, Color backcolor)
+		{
+			return new TitleTextureKey(str文字, pfMusicName, forecolor, backcolor, 530);
 		}
 
-	  
+		private TitleTextureKey ttkサブタイトルテクスチャを生成する(string str文字, Color forecolor, Color backcolor)
+		{
+			return new TitleTextureKey(str文字, pfSubtitle, forecolor, backcolor, 390);
+		}
 
-	
-	    private sealed class TitleTextureKey
-	    {
-	        public readonly string str文字;
-			public readonly string Font;
-			public readonly FontRender fontRender;
-	        public readonly Color forecolor;
-	        public readonly Color backcolor;
-	        public readonly int maxHeight;
-			public readonly int FontSize;
-			public readonly int EdgeSize;
-			public readonly int Tick;
+		private CTexture ResolveTitleTexture(TitleTextureKey titleTextureKey)
+		{
+			if (!_titleTextures.TryGetValue(titleTextureKey, out var texture))
+			{
+				texture = GenerateTitleTexture(titleTextureKey);
+				_titleTextures.Add(titleTextureKey, texture);
+			}
 
-	        public TitleTextureKey(string str文字, FontRender fontrender, Color forecolor, Color backcolor, int maxHeight, string font , int fontsize, int edgesize, int tick = 0)
-	        {
-	            this.str文字 = str文字;
-				this.Font = font;
-				this.fontRender = fontrender;
-	            this.forecolor = forecolor;
-	            this.backcolor = backcolor;
-	            this.maxHeight = maxHeight;
-				this.FontSize = fontsize;
-				this.EdgeSize = edgesize;
-				this.Tick = tick;
-	        }     
-	    }
+			return texture;
+		}
+
+		private static CTexture GenerateTitleTexture(TitleTextureKey titleTextureKey)
+		{
+			using (var bmp = new Bitmap(titleTextureKey.cPrivateFastFont.DrawPrivateFont(
+				titleTextureKey.str文字, titleTextureKey.forecolor, titleTextureKey.backcolor)))
+			{
+				CTexture tx文字テクスチャ = TJAPlayer3.tテクスチャの生成(bmp);
+				if (tx文字テクスチャ.szテクスチャサイズ.Width > titleTextureKey.maxHeight)
+				{
+					tx文字テクスチャ.vc拡大縮小倍率.X = (float)(((double)titleTextureKey.maxHeight) / tx文字テクスチャ.szテクスチャサイズ.Width);
+				}
+
+				return tx文字テクスチャ;
+			}
+		}
+
+		private void ClearTitleTextureCache()
+		{
+			foreach (var titleTexture in _titleTextures.Values)
+			{
+				titleTexture.Dispose();
+			}
+
+			_titleTextures.Clear();
+		}
+
+		private sealed class TitleTextureKey
+		{
+			public readonly string str文字;
+			public readonly CPrivateFastFont cPrivateFastFont;
+			public readonly Color forecolor;
+			public readonly Color backcolor;
+			public readonly int maxHeight;
+
+			public TitleTextureKey(string str文字, CPrivateFastFont cPrivateFastFont, Color forecolor, Color backcolor, int maxHeight)
+			{
+				this.str文字 = str文字;
+				this.cPrivateFastFont = cPrivateFastFont;
+				this.forecolor = forecolor;
+				this.backcolor = backcolor;
+				this.maxHeight = maxHeight;
+			}
+
+			
+		}
+
+
 
 		private void tアイテム数の描画()
 		{
