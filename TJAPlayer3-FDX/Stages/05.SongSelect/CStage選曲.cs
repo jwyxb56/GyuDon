@@ -835,11 +835,27 @@ namespace TJAPlayer3
 
 		private void tカーソルを下へ移動する()
 		{
+			act曲リスト.ctBarAnime2.t停止();
+			act曲リスト.ctBarAnime2.n現在の値 = 0;
+
+			if (act曲リスト.ctBarAnime.n現在の値 >= 600)
+            {
+				act曲リスト.ctBarAnime2.t開始(0, 140, 1, TJAPlayer3.Timer);
+			}
+
 			TJAPlayer3.Skin.soundカーソル移動音.t再生する();
 			this.act曲リスト.t次に移動();
+
 		}
 		private void tカーソルを上へ移動する()
 		{
+			act曲リスト.ctBarAnime2.t停止();
+			act曲リスト.ctBarAnime2.n現在の値 = 0;
+
+			if (act曲リスト.ctBarAnime.n現在の値 >= 600)
+			{
+				act曲リスト.ctBarAnime2.t開始(0, 140, 1, TJAPlayer3.Timer);
+			}
 			TJAPlayer3.Skin.soundカーソル移動音.t再生する();
 			this.act曲リスト.t前に移動();
 		}

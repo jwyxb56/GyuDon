@@ -184,6 +184,10 @@ namespace FDK
         {
             this.t2D描画(x - (this.szテクスチャサイズ.Width / 2 * this.vc拡大縮小倍率.X), y, 1f, this.rc全画像);
         }
+        public void t2D拡大率考慮上中央基準描画(float x, float y)
+        {
+            this.t2D拡大率考慮上中央基準描画((int)x, (int)y);
+        }
         public void t2D拡大率考慮中央基準描画(int x, int y)
         {
             this.t2D描画(x - (this.szテクスチャサイズ.Width / 2 * this.vc拡大縮小倍率.X), y - (szテクスチャサイズ.Height / 2 * this.vc拡大縮小倍率.Y), 1f, this.rc全画像);
