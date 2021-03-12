@@ -1265,11 +1265,17 @@ namespace TJAPlayer3
 							if (ctBarAnime.n現在の値 >= 500)
 								op = (ctBarAnime.n現在の値 - 500f) * (255f / 100f);
 
+							if (TJAPlayer3.stage選曲.r現在選択中の曲.nLevel[i] >= 0)
+								TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = Color.FromArgb(0x40, 255, 255, 255);
+							else
+								TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = Color.FromArgb(0x40, 122, 122, 122);
 							TJAPlayer3.Tx.SongSelect_Frame_Score.Opacity = (int)op;
-							TJAPlayer3.Tx.SongSelect_Frame_Score?.t2D描画(394 + 121 * i, 380, new Rectangle(i * 130, 0, 130, 59));
+							TJAPlayer3.Tx.SongSelect_Frame_Score?.t2D描画(394 + 121 * i, 380, new Rectangle(i * 130, 0, 130, 59));							
+
 							TJAPlayer3.Tx.SongSelect_Level.Opacity = (int)op;
 							TJAPlayer3.Tx.SongSelect_Level?.t2D描画(487 + 121 * i, 396, new Rectangle(TJAPlayer3.stage選曲.r現在選択中の曲.nLevel[i] * 24, 0, 26, 26));
-                        }
+							
+						}
 
                         break;
 
