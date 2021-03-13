@@ -367,6 +367,8 @@ namespace TJAPlayer3
                 if( this.ctDiffSelect移動待ち != null )
                     this.ctDiffSelect移動待ち.t進行();
 
+				NamePlate.nameplate(27, 609);
+
 				// キー入力
 				if( base.eフェーズID == CStage.Eフェーズ.共通_通常状態 
 					&& TJAPlayer3.act現在入力を占有中のプラグイン == null && this.ctキー入力制限.n現在の値 >= this.ctキー入力制限.n終了値)
@@ -559,11 +561,13 @@ namespace TJAPlayer3
 							}
 							#endregion
 							#region [ BDx2: 簡易CONFIG ]
+							/*
                             if( TJAPlayer3.Input管理.IsPushedKey( (int) DxLibDLL.DX.KEY_INPUT_SPACE) )
                             {
 							    TJAPlayer3.Skin.sound変更音.t再生する();
 								this.actSortSongs.tActivatePopupMenu( E楽器パート.DRUMS);
                             }
+							*/
 							#endregion
 						
 							#region [ 上: 難易度変更(上) ]

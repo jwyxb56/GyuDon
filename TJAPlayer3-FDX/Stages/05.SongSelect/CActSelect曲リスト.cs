@@ -507,7 +507,7 @@ namespace TJAPlayer3
 				return;
 				
 			song_last = song;
-			List<C曲リストノード> list = ( song.r親ノード != null ) ? song.r親ノード.list子リスト : TJAPlayer3.Songs管理.list曲ルート;
+			List<C曲リストノード> list = TJAPlayer3.Songs管理.list曲ルート;
 			int index = list.IndexOf( song ) + 1;
 			if ( index <= 0 )
 			{
@@ -984,36 +984,32 @@ namespace TJAPlayer3
 					{
 						this.ttk選択している曲のサブタイトル = null;
 						this.b選択曲が変更された = false;
-					}
-				}
-				this.nスクロールタイマ += nアニメ間隔;
-			}
-			//-----------------
-			#endregion
+                    }
+                }
+                this.nスクロールタイマ += nアニメ間隔;
+            }
+            //-----------------
+            #endregion
 
-			// 描画。
+            // 描画。
 
-			if (this.r現在選択中の曲 == null)
-			{
-				#region [ 曲が１つもないなら「Songs not found.」を表示してここで帰れ。]
-				//-----------------
-				if (bIsEnumeratingSongs)
-				{
-					if (this.txEnumeratingSongs != null)
-					{
-						this.txEnumeratingSongs.t2D描画(320, 160);
-					}
-				}
-				else
-				{
-					if (this.txSongNotFound != null)
-						this.txSongNotFound.t2D描画(320, 160);
-				}
-				//-----------------
-				#endregion
+            if (this.r現在選択中の曲 == null)
+            {
+                #region [ 曲が１つもないなら「Songs not found.」を表示してここで帰れ。]
+                //-----------------
+                if (bIsEnumeratingSongs)
+                {
+                    this.txEnumeratingSongs?.t2D描画(320, 160);
+                }
+                else
+                {
+                    this.txSongNotFound?.t2D描画(320, 160);
+                }
+                //-----------------
+                #endregion
 
-				return 0;
-			}
+                return 0;
+            }
 
 
 
@@ -1047,10 +1043,6 @@ namespace TJAPlayer3
 
                     if (this.stバー情報[nパネル番号].b分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度] == true && n見た目の行番号 != 5)
                         TJAPlayer3.Tx.SongSelect_Branch.t2D描画(xAnime + 66, TJAPlayer3.Skin.SongSelect_Overall_Y - 5);
-
-
-
-
                     //-----------------
                     #endregion
 
@@ -1064,24 +1056,24 @@ namespace TJAPlayer3
                         {
 
 							if (n現在のスクロールカウンタ != 0)
-								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11 - Max + Y);
+								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル)?.t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11 - Max + Y);
 							else if (n見た目の行番号 != 5)
-								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11 - Max + Y);
+								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル)?.t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11 - Max + Y);
 						}
                         else
                         {
 							if (n現在のスクロールカウンタ != 0)
-								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
+								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル)?.t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
 							else if (n見た目の行番号 != 5)
-								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
+								ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル)?.t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
 						}
 					}
                     else
                     {
 						if (n現在のスクロールカウンタ != 0)
-							ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
+							ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル)?.t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
 						else if (n見た目の行番号 != 5)
-							ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル).t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
+							ResolveTitleTexture(this.stバー情報[nパネル番号].ttkタイトル)?.t2D拡大率考慮上中央基準描画(xAnime + 312, yAnime + 11);
 					}
 				
 					
@@ -1336,7 +1328,7 @@ namespace TJAPlayer3
 							op = (ctBarAnime.n現在の値 - 500f) * (255f / 100f);
 						CTexture tx選択している曲のサブタイトル = ResolveTitleTexture(ttk選択している曲のサブタイトル);
 						tx選択している曲のサブタイトル.Opacity = (int)op;
-                        tx選択している曲のサブタイトル.t2D拡大率考慮上中央基準描画(640, 328);
+                        tx選択している曲のサブタイトル?.t2D拡大率考慮上中央基準描画(640, 328);
                     }
 
                     ResolveTitleTexture(this.ttk選択している曲の曲名)?.t2D拡大率考慮上中央基準描画(640, 328 - (int)y);
@@ -1345,9 +1337,7 @@ namespace TJAPlayer3
                 }
 
             }
-			//-----------------
-
-			TJAPlayer3.act文字コンソール.tPrint(0, 0, C文字コンソール.Eフォント種別.白, $"{ctBarAnime.n現在の値}");
+			//-----------------			
 
 			if (this.e曲のバー種別を返す(this.r現在選択中の曲) == Eバー種別.Score && this.nStrジャンルtoNum(this.r現在選択中の曲.strジャンル) != 8)
 			{

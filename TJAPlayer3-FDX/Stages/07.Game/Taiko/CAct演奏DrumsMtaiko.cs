@@ -348,7 +348,7 @@ namespace TJAPlayer3
             //    this.tMtaikoEvent( 0x12, 1, 1 );
             //}
 
-
+            NamePlate.nameplate(-14, 293);
 
             return base.On進行描画();
         }

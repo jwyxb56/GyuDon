@@ -63,6 +63,8 @@ namespace TJAPlayer3
 
         public void LoadTexture()
         {
+            global::TJAPlayer3.NamePlate.Init();
+
             #region 共通
             Tile_Black = TxC(@"Tile_Black.png");
             Tile_White = TxC(@"Tile_White.png");
@@ -521,6 +523,8 @@ namespace TJAPlayer3
                 TJAPlayer3.tテクスチャの解放(ref NamePlate[i]);
             }
 
+        
+
             #endregion
             #region 1_タイトル画面
             TJAPlayer3.tテクスチャの解放(ref Title_Background);
@@ -733,7 +737,7 @@ namespace TJAPlayer3
             #endregion
             #region エフェクト
             TJAPlayer3.tテクスチャの解放(ref Effects_Hit_Explosion);
-            TJAPlayer3.tテクスチャの解放(ref  Effects_Hit_Explosion_Big);
+            TJAPlayer3.tテクスチャの解放(ref Effects_Hit_Explosion_Big);
             TJAPlayer3.tテクスチャの解放(ref Effects_Hit_FireWorks);
 
             TJAPlayer3.tテクスチャの解放(ref Effects_Fire);
@@ -835,6 +839,8 @@ namespace TJAPlayer3
             Scanning_Loudness,
             Overlay;
         public CTexture[] NamePlate;
+
+      
         #endregion
         #region 1_タイトル画面
         public CTexture Title_Background,
@@ -1036,6 +1042,7 @@ namespace TJAPlayer3
         public CTexture Exit_Background/* , */
                                        /*Exit_Text */;
         #endregion
+
 
     }
 }

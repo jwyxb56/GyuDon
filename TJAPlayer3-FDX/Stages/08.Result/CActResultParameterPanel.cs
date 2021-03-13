@@ -242,8 +242,8 @@ namespace TJAPlayer3
 			}
 
 
-			
 
+			NamePlate.nameplate(17, 616);
 
 
             //演奏中のやつ使いまわせなかった。ファック。

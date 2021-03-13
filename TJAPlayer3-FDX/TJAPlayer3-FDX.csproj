@@ -111,6 +111,7 @@
     <Compile Include="Common\C文字コンソール.cs" />
     <Compile Include="Common\Discord.cs" />
     <Compile Include="Common\KeyboardSoundGroupLevelControlHandler.cs" />
+    <Compile Include="Common\NamePlate.cs" />
     <Compile Include="Common\Program.cs" />
     <Compile Include="Common\TJAPlayer3-FDX.cs" />
     <Compile Include="Common\CPrivateFastFont.cs" />

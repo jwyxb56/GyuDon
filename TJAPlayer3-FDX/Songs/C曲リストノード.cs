@@ -58,6 +58,7 @@ namespace TJAPlayer3
         public int[] nLevel = new int[(int)Difficulty.Total]{ 0, 0, 0, 0, 0, 0, 0 };
         public Eジャンル eジャンル = Eジャンル.None;
 		public string Bar_Genre;
+		public int Openindex;
 		
 		// コンストラクタ
 

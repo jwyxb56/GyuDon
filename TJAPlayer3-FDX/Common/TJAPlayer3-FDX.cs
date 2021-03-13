@@ -12,6 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using DxLibDLL;
 using FDK;
 using System.Reflection;
+using Amaoto;
 
 namespace TJAPlayer3
 {
@@ -1366,6 +1367,7 @@ for (int i = 0; i < 3; i++) {
 
 		// その他
 
+		
 		#region [ 汎用ヘルパー ]
 		//-----------------
 		public static CTexture tテクスチャの生成( string fileName )
@@ -1491,6 +1493,8 @@ for (int i = 0; i < 3; i++) {
         //-----------------
         #endregion
 
+
+
         #region [ private ]
         //-----------------
         private bool bマウスカーソル表示中 = true;
@@ -1498,6 +1502,7 @@ for (int i = 0; i < 3; i++) {
 		private static CDTX[] dtx = new CDTX[ 4 ];
 
         public static TextureLoader Tx = new TextureLoader();
+		public static NamePlate NamePlate = new NamePlate();
 
 		private List<CActivity> listトップレベルActivities;
 		private int n進行描画の戻り値;
@@ -1550,6 +1555,8 @@ for (int i = 0; i < 3; i++) {
 		}
 		public void t起動処理()
 		{
+			NamePlate = ConfigManager.GetConfig<NamePlate>("NamePlate.json");
+
 			#region [ strEXEのあるフォルダを決定する ]
 			//-----------------
 // BEGIN #23629 2010.11.13 from: デバッグ時は Application.ExecutablePath が ($SolutionDir)/bin/x86/Debug/ などになり System/ の読み込みに失敗するので、カレントディレクトリを採用する。（プロジェクトのプロパティ→デバッグ→作業ディレクトリが有効になる）
@@ -1959,6 +1966,8 @@ for (int i = 0; i < 3; i++) {
             TJAPlayer3.Tx.LoadTexture();
 
             TJAPlayer3.act文字コンソール.On活性化();
+
+			
         }
 		#region [ Windowイベント処理 ]
 		private void t指定フォルダ内でのプラグイン検索と生成( string strプラグインフォルダパス, string strプラグイン型名 )

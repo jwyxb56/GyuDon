@@ -3,7 +3,6 @@
 /.vs
 */bin
 */obj
-*.exe
 *.log
 *.pdb
 *.db
